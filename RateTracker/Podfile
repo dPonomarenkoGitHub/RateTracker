@@ -8,5 +8,6 @@ target 'RateTracker' do
   use_frameworks!
 
   pod 'RealmSwift'
+  pod 'Reusable'
 
 end

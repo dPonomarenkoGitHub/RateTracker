@@ -23,9 +23,19 @@ final class AssetListViewController: UIViewController {
 // MARK: - Private methods
 private extension AssetListViewController {
     func setupUI() {
+        title = "Exchange Rates"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .add,
+            target: self,
+            action: #selector(onAddPressed)
+        )
     }
     
     func bindPresenter() {
+    }
+    
+    @objc func onAddPressed() {
+        presenter.showAddAsset()
     }
 }
 

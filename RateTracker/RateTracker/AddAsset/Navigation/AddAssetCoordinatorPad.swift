@@ -1,5 +1,5 @@
 //
-//  AssetListCoordinatorPad.swift
+//  AddAssetCoordinatorPad.swift
 //  RateTracker
 //
 //  Created by Dmitry Ponomarenko on 31.03.2025.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class AssetListCoordinatorPad: AssetListCoordinator {
+class AddAssetCoordinatorPad: AddAssetCoordinator {
     var environment: CoordinatorEnvironment {
         .pad
     }
@@ -18,8 +18,6 @@ class AssetListCoordinatorPad: AssetListCoordinator {
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
-    
-    func showAddAsset() {}
 
     func popupPresentationContext() -> UIViewController? {
         navigationController

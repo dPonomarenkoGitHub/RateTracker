@@ -6,7 +6,12 @@
 //
 
 import Foundation
+import Combine
 
 protocol RateFacadeProtocol {
-    func get()
+    func getRates()
+    
+    func getRemoteCurrencies() -> AnyPublisher<[TrackedCurrency], Never>
+    
+    func getLocalCurrencies() -> AnyPublisher<[TrackedCurrency], Never>
 }

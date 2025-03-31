@@ -8,4 +8,5 @@
 import Foundation
 
 protocol AssetListCoordinator: Coordinator {
+    func showAddAsset()
 }

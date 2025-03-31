@@ -10,7 +10,7 @@ import UIKit
 
 class AssetListCoordinatorPhone: AssetListCoordinator {
     var environment: CoordinatorEnvironment {
-	.phone
+        .phone
     }
 
     weak var navigationController: UINavigationController!
@@ -21,5 +21,12 @@ class AssetListCoordinatorPhone: AssetListCoordinator {
 
     func popupPresentationContext() -> UIViewController? {
         navigationController
+    }
+    
+    func showAddAsset() {
+        let controller: AddAssetViewController = Assembly().resolve(
+            coordinator: AddAssetCoordinatorPhone(navigationController: navigationController)
+        )
+        navigationController.pushViewController(controller, animated: true)
     }
 }

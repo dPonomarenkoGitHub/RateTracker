@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class RateFacade {
     private let realmManager: RealmManagerProtocol
@@ -21,7 +22,7 @@ final class RateFacade {
 }
 
 extension RateFacade: RateFacadeProtocol {
-    func get() {
+    func getRates() {
         let router = GetLatestRatesRequest(token: token)
         
         HttpManager.request(router: router, completion: { (result: Result<RatesResponseDto, Error>) in
@@ -32,5 +33,31 @@ extension RateFacade: RateFacadeProtocol {
                 print("Error: \(error)")
             }
         })
+    }
+    
+    func getRemoteCurrencies() -> AnyPublisher<[TrackedCurrency], Never> {
+        Deferred { [token] in
+            Future() { promise in
+                let router = GetCurrenciesRequest(token: token)
+                
+                HttpManager.request(router: router, completion: { (result: Result<[String: String], Error>) in
+                    switch result {
+                    case let .success(response):
+                        promise(.success(RatesFacadeMapper.mapRemoteToDomain(response)))
+                        return
+                    case .failure:
+                        promise(.success([]))
+                        return
+                    }
+                })
+            }
+        }.eraseToAnyPublisher()
+    }
+    
+    func getLocalCurrencies() -> AnyPublisher<[TrackedCurrency], Never> {
+        realmManager.objects(TrackedCurrencyDb.self)
+            .realmPublisher
+            .map { $0.map(RatesFacadeMapper.mapDbToDomain) }
+            .eraseToAnyPublisher()
     }
 }

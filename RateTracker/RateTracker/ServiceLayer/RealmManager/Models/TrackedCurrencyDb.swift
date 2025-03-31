@@ -12,13 +12,13 @@ public final class TrackedCurrencyDb: Object {
     @Persisted(primaryKey: true) var code: String
     @Persisted public var name: String
     @Persisted public var rate: Double
-    @Persisted public var updatedAt: Int?
+    @Persisted public var updatedAt: Double?
     
     public convenience init(
         code: String,
         name: String,
         rate: Double,
-        updatedAt: Int?
+        updatedAt: Double?
     ) {
         self.init()
         self.code = code

@@ -19,7 +19,6 @@ final class AddAssetCell: UITableViewCell, NibReusable {
         containerView.backgroundColor = highlighted ? .systemGray5 : .white
     }
     
-    
     func setup(with model: AddAssetContract.AssetModel) {
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle

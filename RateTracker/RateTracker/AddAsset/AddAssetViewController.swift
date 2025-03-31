@@ -15,6 +15,13 @@ final class AddAssetViewController: UIViewController {
     var presenter: AddAssetPresenter!
     
     private lazy var dataSource = makeDataSource()
+    
+    private lazy var doneButton = UIBarButtonItem(
+        barButtonSystemItem: .done,
+        target: self,
+        action: #selector(onDonePressed)
+    )
+    
     private var cancelBag = [AnyCancellable]()
     
     @IBOutlet private var tableView: UITableView!
@@ -34,12 +41,21 @@ private extension AddAssetViewController {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = presenter
         searchController.obscuresBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = "Search asset"
+        searchController.searchBar.isHidden = false
         navigationItem.searchController = searchController
         definesPresentationContext = true
+        navigationItem.hidesSearchBarWhenScrolling = false
+        
+        navigationItem.rightBarButtonItem = doneButton
+        doneButton.isHidden = true
         
         tableView.register(cellType: AddAssetCell.self)
         tableView.contentInset.top = 6
+        tableView.delegate = self
+        
+        dataSource.defaultRowAnimation = .none
     }
     
     func bindPresenter() {
@@ -51,6 +67,17 @@ private extension AddAssetViewController {
                 self?.dataSource.apply(snapshot)
             }
             .store(in: &cancelBag)
+        
+        presenter.isDoneHidden
+            .sink { [doneButton] isHidden in
+                doneButton.isHidden = isHidden
+            }
+            .store(in: &cancelBag)
+    }
+    
+    @objc func onDonePressed() {
+        presenter.apply()
+        navigationController?.popViewController(animated: true)
     }
 }
 
@@ -67,7 +94,15 @@ private extension AddAssetViewController {
     }
 }
 
-
+extension AddAssetViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cell = dataSource.itemIdentifier(for: indexPath) else { return }
+        switch cell {
+        case let .asset(model):
+            presenter.select(model)
+        }
+    }
+}
 
 // MARK: - DI
 extension Assembly {

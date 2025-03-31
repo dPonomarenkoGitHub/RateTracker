@@ -8,16 +8,13 @@
 import Foundation
 
 enum AssetListContract {
-    enum SectionType: Hashable {
-        case type
+    enum Cell: Hashable {
+        case asset(Model)
     }
     
-    struct Section: Hashable {
-        let type: SectionType
-        let cells: [Cell]
-    }
-    
-    enum Cell {
-        case cell
+    struct Model: Hashable {
+        let title: String
+        let subtitle: String
+        let rate: String?
     }
 }

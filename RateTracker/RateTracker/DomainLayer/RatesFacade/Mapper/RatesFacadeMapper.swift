@@ -26,4 +26,25 @@ enum RatesFacadeMapper {
             TrackedCurrency(code: item.key, name: item.value, rate: 0, updatedAt: nil)
         }
     }
+    
+    static func mapRemoteToDomain(_ from: RatesResponseDto) -> RatesData {
+        .init(
+            updatedAt: Date(timeIntervalSince1970: TimeInterval(from.timestamp)),
+            base: from.base,
+            rates: from.rates
+        )
+    }
+    
+    static func mapDomainToDb(_ from: [TrackedCurrency]) -> [TrackedCurrencyDb] {
+        from.map { mapDomainToDb($0) }
+    }
+    
+    static func mapDomainToDb(_ from: TrackedCurrency) -> TrackedCurrencyDb {
+        .init(
+            code: from.code,
+            name: from.name,
+            rate: from.rate,
+            updatedAt: from.updatedAt?.timeIntervalSince1970
+        )
+    }
 }

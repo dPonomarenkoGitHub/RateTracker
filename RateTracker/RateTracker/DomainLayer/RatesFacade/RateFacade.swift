@@ -22,17 +22,23 @@ final class RateFacade {
 }
 
 extension RateFacade: RateFacadeProtocol {
-    func getRates() {
-        let router = GetLatestRatesRequest(token: token)
-        
-        HttpManager.request(router: router, completion: { (result: Result<RatesResponseDto, Error>) in
-            switch result {
-            case let .success(response):
-                print("Success: \(response)")
-            case let .failure(error):
-                print("Error: \(error)")
+    func getRates() -> AnyPublisher<RatesData, Never> {
+        Deferred { [token] in
+            Future() { promise in
+                let router = GetLatestRatesRequest(token: token)
+                
+                HttpManager.request(router: router, completion: { (result: Result<RatesResponseDto, Error>) in
+                    switch result {
+                    case let .success(response):
+                        promise(.success(RatesFacadeMapper.mapRemoteToDomain(response)))
+                        return
+                    case .failure:
+                        promise(.success(.empty))
+                        return
+                    }
+                })
             }
-        })
+        }.eraseToAnyPublisher()
     }
     
     func getRemoteCurrencies() -> AnyPublisher<[TrackedCurrency], Never> {
@@ -59,5 +65,18 @@ extension RateFacade: RateFacadeProtocol {
             .realmPublisher
             .map { $0.map(RatesFacadeMapper.mapDbToDomain) }
             .eraseToAnyPublisher()
+    }
+    
+    func save(_ currencies: [TrackedCurrency]) {
+        realmManager.add(RatesFacadeMapper.mapDomainToDb(currencies), update: true)
+    }
+    
+    func remove(_ currency: TrackedCurrency) {
+        realmManager.write { realm in
+            guard let object = realm.object(ofType: TrackedCurrencyDb.self, forPrimaryKey: currency.code) else {
+                return
+            }
+            realm.delete(object)
+        }
     }
 }

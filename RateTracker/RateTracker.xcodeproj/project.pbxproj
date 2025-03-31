@@ -6,8 +6,17 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		58717E9F3F19F4289CB1871A /* Pods_RateTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D43525463014902646AF1A13 /* Pods_RateTracker.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		049FF29532ED5D7E5107F911 /* Pods-RateTracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RateTracker.release.xcconfig"; path = "Target Support Files/Pods-RateTracker/Pods-RateTracker.release.xcconfig"; sourceTree = "<group>"; };
 		41C91E242D9ACC6D005B79CA /* RateTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RateTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		41C91EC52D9ADAF7005B79CA /* Realm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Realm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		41C91EC62D9ADAF7005B79CA /* RealmSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD12DD38CA15554E3FD8B369 /* Pods-RateTracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RateTracker.debug.xcconfig"; path = "Target Support Files/Pods-RateTracker/Pods-RateTracker.debug.xcconfig"; sourceTree = "<group>"; };
+		D43525463014902646AF1A13 /* Pods_RateTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RateTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58717E9F3F19F4289CB1871A /* Pods_RateTracker.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +57,8 @@
 			children = (
 				41C91E262D9ACC6D005B79CA /* RateTracker */,
 				41C91E252D9ACC6D005B79CA /* Products */,
+				EC2BFC30B3D3672CD10FAD53 /* Pods */,
+				D955A9E757B36584E5419CDC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +70,25 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D955A9E757B36584E5419CDC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				41C91EC52D9ADAF7005B79CA /* Realm.framework */,
+				41C91EC62D9ADAF7005B79CA /* RealmSwift.framework */,
+				D43525463014902646AF1A13 /* Pods_RateTracker.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EC2BFC30B3D3672CD10FAD53 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CD12DD38CA15554E3FD8B369 /* Pods-RateTracker.debug.xcconfig */,
+				049FF29532ED5D7E5107F911 /* Pods-RateTracker.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -65,9 +96,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 41C91E372D9ACC6E005B79CA /* Build configuration list for PBXNativeTarget "RateTracker" */;
 			buildPhases = (
+				0542D24B12A655DE9DC3A1C2 /* [CP] Check Pods Manifest.lock */,
 				41C91E202D9ACC6D005B79CA /* Sources */,
 				41C91E212D9ACC6D005B79CA /* Frameworks */,
 				41C91E222D9ACC6D005B79CA /* Resources */,
+				6A4876BFD4D88D9DA62241CE /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -77,8 +110,6 @@
 				41C91E262D9ACC6D005B79CA /* RateTracker */,
 			);
 			name = RateTracker;
-			packageProductDependencies = (
-			);
 			productName = RateTracker;
 			productReference = 41C91E242D9ACC6D005B79CA /* RateTracker.app */;
 			productType = "com.apple.product-type.application";
@@ -127,6 +158,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0542D24B12A655DE9DC3A1C2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RateTracker-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6A4876BFD4D88D9DA62241CE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RateTracker/Pods-RateTracker-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RateTracker/Pods-RateTracker-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RateTracker/Pods-RateTracker-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		41C91E202D9ACC6D005B79CA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -140,18 +213,19 @@
 /* Begin XCBuildConfiguration section */
 		41C91E382D9ACC6E005B79CA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CD12DD38CA15554E3FD8B369 /* Pods-RateTracker.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RateTracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -167,18 +241,19 @@
 		};
 		41C91E392D9ACC6E005B79CA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 049FF29532ED5D7E5107F911 /* Pods-RateTracker.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RateTracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

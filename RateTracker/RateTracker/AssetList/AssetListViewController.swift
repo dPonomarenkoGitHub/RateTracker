@@ -37,6 +37,9 @@ private extension AssetListViewController {
         )
         
         tableView.register(cellType: AssetCell.self)
+        tableView.register(cellType: UpdateStatusCell.self)
+        tableView.register(cellType: AssetEmptyCell.self)
+        tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.contentInset.top = 6
         tableView.delegate = self
         
@@ -67,6 +70,12 @@ private extension AssetListViewController {
                 return tableView.dequeueReusableCell(for: indexPath, cellType: AssetCell.self).then {
                     $0.setup(with: model)
                 }
+            case let .status(text):
+                return tableView.dequeueReusableCell(for: indexPath, cellType: UpdateStatusCell.self).then {
+                    $0.setup(with: text)
+                }
+            case .empty:
+                return tableView.dequeueReusableCell(for: indexPath, cellType: AssetEmptyCell.self)
             }
         }
     }
@@ -74,20 +83,22 @@ private extension AssetListViewController {
 
 extension AssetListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-         let deleteAction = UIContextualAction(
-            style: .destructive,
-            title: "Delete") { [weak self] _, _, complete in
-                guard let cell = self?.dataSource.itemIdentifier(for: indexPath) else {
-                    return
-                }
-                switch cell {
-                case let .asset(model):
-                    self?.presenter.remove(model)
-                }
-            }
-         deleteAction.backgroundColor = .red
+        guard let cell = dataSource.itemIdentifier(for: indexPath) else {
+            return nil
+        }
+        switch cell {
+        case let .asset(model):
+            let deleteAction = UIContextualAction(
+               style: .destructive,
+               title: "Delete") { [weak self] _, _, complete in
+                   self?.presenter.remove(model)
+               }
+            deleteAction.backgroundColor = .red
 
-         return UISwipeActionsConfiguration(actions: [deleteAction])
+            return UISwipeActionsConfiguration(actions: [deleteAction])
+        default:
+            return nil
+        }
      }
 }
 

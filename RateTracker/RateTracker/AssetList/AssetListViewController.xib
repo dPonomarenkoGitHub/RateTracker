@@ -20,10 +20,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ucw-vJ-N7j">
-                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                    <rect key="frame" x="0.0" y="59" width="393" height="793"/>
                     <subviews>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="e2m-Uw-PlT">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="759"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
                             <color key="backgroundColor" systemColor="systemGray6Color"/>
                         </tableView>
                     </subviews>
@@ -33,7 +33,7 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="ucw-vJ-N7j" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="7lC-Zq-kZu"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="ucw-vJ-N7j" secondAttribute="bottom" id="Ujl-8g-Kjl"/>
+                <constraint firstAttribute="bottom" secondItem="ucw-vJ-N7j" secondAttribute="bottom" id="Ujl-8g-Kjl"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="ucw-vJ-N7j" secondAttribute="trailing" id="qlF-Js-cgg"/>
                 <constraint firstItem="ucw-vJ-N7j" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="xct-vI-N2J"/>
             </constraints>

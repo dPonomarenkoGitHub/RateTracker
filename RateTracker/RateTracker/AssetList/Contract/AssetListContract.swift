@@ -10,6 +10,8 @@ import Foundation
 enum AssetListContract {
     enum Cell: Hashable {
         case asset(Model)
+        case status(String)
+        case empty
     }
     
     struct Model: Hashable {

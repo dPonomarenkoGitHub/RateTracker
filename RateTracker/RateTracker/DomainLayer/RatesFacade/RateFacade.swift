@@ -67,6 +67,11 @@ extension RateFacade: RateFacadeProtocol {
             .eraseToAnyPublisher()
     }
     
+    func getLocalCurrenciesCodes() -> [String] {
+        realmManager.objects(TrackedCurrencyDb.self)
+            .map { $0.code }
+    }
+    
     func save(_ currencies: [TrackedCurrency]) {
         realmManager.add(RatesFacadeMapper.mapDomainToDb(currencies), update: true)
     }

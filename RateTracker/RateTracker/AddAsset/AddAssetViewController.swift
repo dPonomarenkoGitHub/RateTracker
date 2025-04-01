@@ -52,6 +52,7 @@ private extension AddAssetViewController {
         doneButton.isHidden = true
         
         tableView.register(cellType: AddAssetCell.self)
+        tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.contentInset.top = 6
         tableView.delegate = self
         

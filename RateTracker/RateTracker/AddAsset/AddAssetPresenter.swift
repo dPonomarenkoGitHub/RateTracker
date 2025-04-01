@@ -17,6 +17,8 @@ final class AddAssetPresenter: NSObject {
     
     private let selectedCodesSubject = CurrentValueSubject<Set<String>, Never>(Set([]))
     private let dataSourceSubject = CurrentValueSubject<[Contract.Cell], Never>([])
+    private let remoteCurrenciesSubject = CurrentValueSubject<[TrackedCurrency], Never>([])
+    private let searchQuerySubject = CurrentValueSubject<String, Never>("")
     private var cancelBag = [AnyCancellable]()
     
     var dataSource: AnyPublisher<[Contract.Cell], Never> {
@@ -51,20 +53,9 @@ final class AddAssetPresenter: NSObject {
     }
     
     func apply() {
-        let filtered: [TrackedCurrency] = dataSourceSubject
-            .value.map {
-                switch $0 {
-                case let .asset(model):
-                    return model
-                }
-            }
-            .filter {
-                selectedCodesSubject.value.contains($0.title)
-            }
-            .map {
-                .init(code: $0.title, name: $0.subtitle, rate: 0, updatedAt: nil)
-            }
-        
+        let filtered: [TrackedCurrency] = remoteCurrenciesSubject.value.filter {
+            selectedCodesSubject.value.contains($0.code)
+        }
         ratesFacade.save(filtered)
     }
 }
@@ -72,8 +63,33 @@ final class AddAssetPresenter: NSObject {
 // MARK: - Private methods
 private extension AddAssetPresenter {
     func bindSelf() {
+        let queryPublisher = searchQuerySubject
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .debounce(for: 0.3, scheduler: DispatchQueue.main)
+        
+        ratesFacade.getRemoteCurrencies()
+            .sink { [weak self] currencies in
+                guard let self else { return }
+                let localCodes = self.ratesFacade.getLocalCurrenciesCodes()
+                let filtered = currencies.filter { !localCodes.contains($0.code) }
+                self.remoteCurrenciesSubject.send(filtered)
+            }
+            .store(in: &cancelBag)
+        
+        let filteredCurrenciesPublisher = Publishers.CombineLatest(
+            queryPublisher,
+            remoteCurrenciesSubject
+        )
+            .map { query, currencies in
+                guard !query.isEmpty else { return currencies }
+                return currencies.filter({
+                    $0.code.lowercased().contains(query.lowercased()) ||
+                    $0.name.lowercased().contains(query.lowercased()) })
+            }
+            .eraseToAnyPublisher()
+        
         Publishers.CombineLatest(
-            ratesFacade.getRemoteCurrencies(),
+            filteredCurrenciesPublisher,
             selectedCodesSubject
         )
             .compactMap { [weak self] remote, selectedCodes in
@@ -99,11 +115,8 @@ private extension AddAssetPresenter {
 
 extension AddAssetPresenter: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        print("Searching with: " + (searchController.searchBar.text ?? ""))
-        let searchText = (searchController.searchBar.text ?? "")
-        //self.currentSearchText = searchText
-        //search()
-        debugPrint(searchText)
+        let searchText = searchController.searchBar.text ?? ""
+        searchQuerySubject.send(searchText)
     }
 }
 

@@ -16,7 +16,15 @@ final class AssetListPresenter {
     
     private let dataSourceSubject = CurrentValueSubject<[Contract.Cell], Never>([])
     private let localCurrenciesSubject = CurrentValueSubject<[TrackedCurrency], Never>([])
+    private let lastUpdatedSubject = CurrentValueSubject<Date?, Never>(nil)
     private var cancelBag = [AnyCancellable]()
+    
+    private lazy var formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM HH:mm:ss"
+        return formatter
+    }()
+    
     
     var dataSource: AnyPublisher<[Contract.Cell], Never> {
         dataSourceSubject.eraseToAnyPublisher()
@@ -53,9 +61,9 @@ private extension AssetListPresenter {
             .store(in: &cancelBag)
         
         
-        localCurrenciesSubject
-            .compactMap { [weak self] remote in
-                self?.map(remote)
+        Publishers.CombineLatest(localCurrenciesSubject, lastUpdatedSubject)
+            .compactMap { [weak self] remote, lastUpdate in
+                self?.map(remote, updated: lastUpdate)
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -63,24 +71,47 @@ private extension AssetListPresenter {
             }
             .store(in: &cancelBag)
         
-        Publishers.CombineLatest(ratesFacade.getRates(), localCurrenciesSubject)
+        let ratesPublisher = Timer.publish(every: 5, tolerance: 0.5, on: .main, in: .common)
+            .autoconnect()
+            .map { [ratesFacade] _ in
+                ratesFacade.getRates()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+                
+        Publishers.CombineLatest(ratesPublisher, localCurrenciesSubject)
             .sink { [weak self] data , local in
+                guard !local.isEmpty else { return }
                 let updated = local.map {
                     $0.update(rate: data.rates[$0.code], date: data.updatedAt)
                 }
+                self?.lastUpdatedSubject.send(Date())
                 self?.ratesFacade.save(updated)
             }
             .store(in: &cancelBag)
     }
     
-    func map(_ currencies: [TrackedCurrency]) -> [Contract.Cell] {
-        currencies.map {
+    func map(_ currencies: [TrackedCurrency], updated: Date?) -> [Contract.Cell] {
+        var cells = [Contract.Cell]()
+        
+        if let updated, !currencies.isEmpty {
+            let status = "Last updated: \(formatter.string(from: updated))"
+            cells.append(.status(status))
+        }
+        
+        cells.append(contentsOf: currencies.map {
             .asset(.init(
                 title: $0.code,
                 subtitle: $0.name,
                 rate: $0.rateString
             ))
+        })
+        
+        if cells.isEmpty {
+            cells.append(.empty)
         }
+        
+        return cells
     }
 }
 

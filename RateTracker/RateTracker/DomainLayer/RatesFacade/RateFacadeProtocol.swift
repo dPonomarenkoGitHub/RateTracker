@@ -15,6 +15,8 @@ protocol RateFacadeProtocol {
     
     func getLocalCurrencies() -> AnyPublisher<[TrackedCurrency], Never>
     
+    func getLocalCurrenciesCodes() -> [String]
+    
     func save(_ currencies: [TrackedCurrency])
     
     func remove(_ currency: TrackedCurrency)

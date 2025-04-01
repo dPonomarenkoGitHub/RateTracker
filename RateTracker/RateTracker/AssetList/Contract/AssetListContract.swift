@@ -17,6 +17,6 @@ enum AssetListContract {
     struct Model: Hashable {
         let title: String
         let subtitle: String
-        let rate: String?
+        let rate: NSAttributedString?
     }
 }

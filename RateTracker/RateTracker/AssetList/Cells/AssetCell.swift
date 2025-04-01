@@ -17,7 +17,7 @@ final class AssetCell: UITableViewCell, NibReusable {
     func setup(with model: AssetListContract.Model) {
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
-        rateLabel.text = model.rate
+        rateLabel.attributedText = model.rate
         rateLabel.isHidden = model.rate == nil
     }
 }
